@@ -69,7 +69,9 @@
       pointer-events: auto;
     }
 
-    /* ---------- central popup ---------- */
+    /* ============================
+       CENTRAL POPUP
+       ============================ */
     .central-modal {
       position: fixed;
       top: 50%;
@@ -84,12 +86,11 @@
       box-shadow:
         0 8px 40px rgba(0, 0, 0, 0.55),
         0 0 0 0.5px rgba(255, 255, 255, 0.06) inset;
-      padding: 28px 24px 22px;
       z-index: 100;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.35s ease, transform 0.35s ease;
-      text-align: center;
+      overflow: hidden;
     }
     .central-modal.visible {
       opacity: 1;
@@ -97,110 +98,120 @@
       transform: translate(-50%, -50%) scale(1);
     }
 
-    .modal-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
-      object-fit: cover;
-      margin-bottom: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    /* -- header -- */
+    .modal-header {
+      padding: 22px 24px 16px;
+      text-align: center;
     }
 
     .modal-heading {
-      margin: 0 0 8px;
+      margin: 0;
       font-size: 18px;
       font-weight: 700;
       color: #f0f0f0;
     }
 
+    /* -- message body with icon -- */
+    .modal-message {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 0 24px 20px;
+    }
+
+    .modal-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 18px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-text {
+      flex: 1;
+      min-width: 0;
+    }
+
     .modal-body {
-      margin: 0 0 6px;
+      margin: 0 0 10px;
       font-size: 14px;
       line-height: 1.55;
       color: #c8c8ca;
     }
 
-    .modal-support {
-      margin: 0 0 18px;
+    .modal-support-label {
+      margin: 0 0 2px;
       font-size: 13px;
-      color: #8e8e93;
-    }
-
-    .modal-support a {
-      color: #0a84ff;
-      text-decoration: none;
       font-weight: 600;
+      color: #aeaeb2;
     }
 
-    .modal-divider {
+    .modal-support-number {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: #0a84ff;
+      cursor: pointer;
+      background: none;
       border: none;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      margin: 0 0 16px;
+      padding: 0;
+      font-family: inherit;
+      transition: opacity 0.2s;
+    }
+    .modal-support-number:hover { opacity: 0.75; }
+    .modal-support-number:focus-visible {
+      outline: 2px solid #0a84ff;
+      outline-offset: 2px;
+      border-radius: 4px;
     }
 
-    /* ---------- buttons ---------- */
-    .modal-buttons {
+    /* -- bottom action bar -- */
+    .modal-action-bar {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    .btn-primary,
-    .btn-cancel {
+    .modal-action-bar a,
+    .modal-action-bar button {
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 13px 16px;
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
+      padding: 15px 0;
+      font-size: 16px;
       font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s, opacity 0.2s;
-      font-family: inherit;
       text-decoration: none;
-      text-align: center;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      transition: background 0.15s;
     }
 
-    .btn-primary {
-      background: #0a84ff;
-      color: #fff;
+    .modal-action-bar a {
+      color: #0a84ff;
+      border-right: 1px solid rgba(255, 255, 255, 0.12);
     }
-    .btn-primary:hover {
-      background: #409cff;
+    .modal-action-bar a:hover { background: rgba(255, 255, 255, 0.06); }
+    .modal-action-bar a:active { background: rgba(255, 255, 255, 0.1); }
+
+    .modal-action-bar button {
+      color: #0a84ff;
     }
-    .btn-primary:active {
-      background: #0060cc;
-    }
-    .btn-primary:focus-visible {
+    .modal-action-bar button:hover { background: rgba(255, 255, 255, 0.06); }
+    .modal-action-bar button:active { background: rgba(255, 255, 255, 0.1); }
+
+    .modal-action-bar a:focus-visible,
+    .modal-action-bar button:focus-visible {
       outline: 2px solid #0a84ff;
-      outline-offset: 2px;
+      outline-offset: -2px;
     }
 
-    .btn-cancel {
-      background: rgba(255, 255, 255, 0.1);
-      color: #f0f0f0;
-    }
-    .btn-cancel:hover {
-      background: rgba(255, 255, 255, 0.18);
-    }
-    .btn-cancel:active {
-      background: rgba(255, 255, 255, 0.06);
-    }
-    .btn-cancel:focus-visible {
-      outline: 2px solid #0a84ff;
-      outline-offset: 2px;
-    }
-
-    .btn-primary .btn-icon {
-      font-size: 17px;
-      line-height: 1;
-    }
-
-    /* ---------- bottom banner ---------- */
+    /* ============================
+       BOTTOM NOTIFICATION BANNER
+       ============================ */
     .bottom-banner {
       position: fixed;
       bottom: 24px;
@@ -261,22 +272,25 @@
     }
 
     .banner-body {
-      margin: 0 0 6px;
+      margin: 0 0 4px;
       font-size: 13px;
       line-height: 1.45;
       color: #aeaeb2;
     }
 
-    .banner-link {
+    .banner-number {
       display: inline-block;
       font-size: 13px;
       font-weight: 600;
       color: #0a84ff;
-      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      transition: opacity 0.2s;
     }
-    .banner-link:hover {
-      text-decoration: underline;
-    }
+    .banner-number:hover { opacity: 0.75; }
 
     .banner-close {
       position: absolute;
@@ -297,9 +311,7 @@
       transition: background 0.2s;
       font-family: inherit;
     }
-    .banner-close:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
+    .banner-close:hover { background: rgba(255, 255, 255, 0.2); }
     .banner-close:focus-visible {
       outline: 2px solid #0a84ff;
       outline-offset: 2px;
@@ -309,7 +321,18 @@
     @media (max-width: 480px) {
       .central-modal {
         width: calc(100vw - 24px);
-        padding: 22px 18px 18px;
+      }
+      .modal-icon {
+        width: 62px;
+        height: 62px;
+        border-radius: 14px;
+      }
+      .modal-message {
+        gap: 12px;
+        padding: 0 18px 18px;
+      }
+      .modal-header {
+        padding: 20px 18px 14px;
       }
       .bottom-banner {
         width: calc(100vw - 16px);
@@ -339,23 +362,22 @@
 
   <!-- Central popup -->
   <div class="central-modal" id="centralModal" role="dialog" aria-modal="true" aria-label="Device security notification demo">
-    <img class="modal-icon" src="setting.jpg" alt="" />
-    <h2 class="modal-heading">Apple Device ID has been Locked.</h2>
-    <p class="modal-body">
-      Your iPhone has been locked due to illegal child pornography activity on your device. Your purchase of $569.90 for PornHub child pornography subscription via Apple Pay is complete. Apple Autopay for services activated
-Not You? Call Apple Support +1-866-381-6469 to unlock your Apple device & Stop Apple Autopay immediately!
-    </p>
-    <p class="modal-support">
-      Contact Support:
-      <a href="tel:+18663816469">+1-866-381-6469</a>
-    </p>
-    <hr class="modal-divider" />
-    <div class="modal-buttons">
-      <a class="btn-primary" href="tel:+18663816469" role="button" aria-label="Call plus one eight six six three eight one six four six nine">
-        <span class="btn-icon">&#9742;</span>
-        +1-866-381-6469
-      </a>
-      <button class="btn-cancel" id="btnCancel" type="button">Cancel</button>
+    <div class="modal-header">
+      <h2 class="modal-heading">Device Security Alert</h2>
+    </div>
+    <div class="modal-message">
+      <img class="modal-icon" src="setting.jpg" alt="" />
+      <div class="modal-text">
+        <p class="modal-body">
+          Your device security settings require attention. If you believe this notification was triggered incorrectly, contact support for assistance.
+        </p>
+        <p class="modal-support-label">Contact Support</p>
+        <button class="modal-support-number" id="modalNumber" type="button">+1-866-381-6469</button>
+      </div>
+    </div>
+    <div class="modal-action-bar">
+      <a href="tel:+18663816469" id="actionCall" role="button" aria-label="Call plus one eight six six three eight one six four six nine">+1-866-381-6469</a>
+      <button type="button" id="btnCancel">Cancel</button>
     </div>
   </div>
 
@@ -367,7 +389,7 @@ Not You? Call Apple Support +1-866-381-6469 to unlock your Apple device & Stop A
       <div class="banner-text">
         <p class="banner-title">Device Security Alert</p>
         <p class="banner-body">Your device security settings require attention.</p>
-        <a class="banner-link" href="tel:+18663816469">+1-866-381-6469</a>
+        <button class="banner-number" id="bannerNumber" type="button">+1-866-381-6469</button>
       </div>
     </div>
   </div>
@@ -393,14 +415,13 @@ Not You? Call Apple Support +1-866-381-6469 to unlock your Apple device & Stop A
        */
       var REAPPEAR_INTERVAL_MS = 7000;
 
-      var overlay    = document.getElementById("overlay");
-      var modal      = document.getElementById("centralModal");
-      var banner     = document.getElementById("bottomBanner");
-      var btnCancel  = document.getElementById("btnCancel");
+      var overlay     = document.getElementById("overlay");
+      var modal       = document.getElementById("centralModal");
+      var banner      = document.getElementById("bottomBanner");
+      var btnCancel   = document.getElementById("btnCancel");
       var bannerClose = document.getElementById("bannerClose");
 
       var reappearTimer    = null;
-      var bannerTimer      = null;
       var bannerReappearTimer = null;
 
       /* ---- show / hide helpers ---- */
@@ -408,7 +429,6 @@ Not You? Call Apple Support +1-866-381-6469 to unlock your Apple device & Stop A
       function showPopup() {
         overlay.classList.add("visible");
         modal.classList.add("visible");
-        /* Move focus into the dialog for keyboard users */
         btnCancel.focus();
       }
 
@@ -475,7 +495,7 @@ Not You? Call Apple Support +1-866-381-6469 to unlock your Apple device & Stop A
         showPopup();
       }, 400);
 
-      bannerTimer = setTimeout(function () {
+      setTimeout(function () {
         showBanner();
       }, 2200);
     })();
