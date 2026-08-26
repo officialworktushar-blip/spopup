@@ -11,9 +11,17 @@
      *  This page is a visual/UI demo. It does NOT impersonate Apple,
      *  any real device manufacturer, or any real support service.
      *  No real security actions are taken. No data is collected.
-     *  No phone numbers are auto-dialed.
+     *  No phone numbers are auto-dialed without user interaction.
      * ============================================================
      */
+
+    /* ---- Configuration ----
+     * REAPPEAR_INTERVAL_MS: how long (ms) after Cancel before the
+     * popup reappears. Adjust this value to control the cycle.
+     */
+    :root {
+      --reappear-interval-ms: 7000;
+    }
 
     *, *::before, *::after { box-sizing: border-box; }
 
@@ -61,88 +69,13 @@
       pointer-events: auto;
     }
 
-    /* ---------- shared modal / banner styles ---------- */
-    .demo-badge {
-      display: inline-block;
-      background: rgba(255, 200, 50, 0.18);
-      color: #ffc832;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 200, 50, 0.3);
-      margin-bottom: 12px;
-    }
-
-    .modal-heading {
-      margin: 0 0 6px;
-      font-size: 18px;
-      font-weight: 700;
-      color: #f0f0f0;
-    }
-
-    .modal-body {
-      margin: 0 0 10px;
-      font-size: 14px;
-      line-height: 1.55;
-      color: #c8c8ca;
-    }
-
-    .demo-number {
-      display: inline-block;
-      font-size: 13px;
-      color: #7eb8ff;
-      background: rgba(126, 184, 255, 0.1);
-      padding: 3px 9px;
-      border-radius: 6px;
-      border: 1px solid rgba(126, 184, 255, 0.25);
-      cursor: pointer;
-      transition: background 0.2s;
-      user-select: all;
-      text-decoration: none;
-    }
-    .demo-number:hover {
-      background: rgba(126, 184, 255, 0.2);
-    }
-
-    .copy-toast {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: rgba(30, 30, 30, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 8px 18px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      z-index: 300;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    .copy-toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
     /* ---------- central popup ---------- */
-    .popup-container {
-      position: relative;
-      z-index: 10;
-    }
-
     .central-modal {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0.92);
-      width: min(370px, calc(100vw - 32px));
+      width: min(376px, calc(100vw - 32px));
       background: rgba(28, 28, 30, 0.82);
       backdrop-filter: blur(40px) saturate(1.6);
       -webkit-backdrop-filter: blur(40px) saturate(1.6);
@@ -174,37 +107,97 @@
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
     }
 
+    .modal-heading {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #f0f0f0;
+    }
+
+    .modal-body {
+      margin: 0 0 6px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #c8c8ca;
+    }
+
+    .modal-support {
+      margin: 0 0 18px;
+      font-size: 13px;
+      color: #8e8e93;
+    }
+
+    .modal-support a {
+      color: #0a84ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
     .modal-divider {
       border: none;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
-      margin: 14px 0;
+      margin: 0 0 16px;
     }
 
-    .modal-contact {
-      font-size: 12px;
-      color: #8e8e93;
-      margin-bottom: 16px;
+    /* ---------- buttons ---------- */
+    .modal-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .btn-close {
-      display: block;
+    .btn-primary,
+    .btn-cancel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       width: 100%;
-      padding: 12px;
+      padding: 13px 16px;
       border: none;
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.1);
-      color: #f0f0f0;
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, opacity 0.2s;
       font-family: inherit;
+      text-decoration: none;
+      text-align: center;
     }
-    .btn-close:hover {
+
+    .btn-primary {
+      background: #0a84ff;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #409cff;
+    }
+    .btn-primary:active {
+      background: #0060cc;
+    }
+    .btn-primary:focus-visible {
+      outline: 2px solid #0a84ff;
+      outline-offset: 2px;
+    }
+
+    .btn-cancel {
+      background: rgba(255, 255, 255, 0.1);
+      color: #f0f0f0;
+    }
+    .btn-cancel:hover {
       background: rgba(255, 255, 255, 0.18);
     }
-    .btn-close:active {
+    .btn-cancel:active {
       background: rgba(255, 255, 255, 0.06);
+    }
+    .btn-cancel:focus-visible {
+      outline: 2px solid #0a84ff;
+      outline-offset: 2px;
+    }
+
+    .btn-primary .btn-icon {
+      font-size: 17px;
+      line-height: 1;
     }
 
     /* ---------- bottom banner ---------- */
@@ -227,6 +220,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.45s ease, transform 0.45s ease;
+      overflow: hidden;
     }
     .bottom-banner.visible {
       opacity: 1;
@@ -267,20 +261,48 @@
     }
 
     .banner-body {
-      margin: 0;
+      margin: 0 0 6px;
       font-size: 13px;
       line-height: 1.45;
       color: #aeaeb2;
     }
 
-    .banner-badge {
-      display: block;
-      margin-top: 8px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: #ffc832;
+    .banner-link {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0a84ff;
+      text-decoration: none;
+    }
+    .banner-link:hover {
+      text-decoration: underline;
+    }
+
+    .banner-close {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: #aeaeb2;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+    .banner-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .banner-close:focus-visible {
+      outline: 2px solid #0a84ff;
+      outline-offset: 2px;
     }
 
     /* ---------- responsive ---------- */
@@ -316,96 +338,146 @@
   <div class="overlay" id="overlay"></div>
 
   <!-- Central popup -->
-  <div class="central-modal" id="centralModal" role="dialog" aria-label="Fictional security demo alert">
-    <img class="modal-icon" src="setting.jpg" alt="Demo settings icon" />
-    <span class="demo-badge">DEMO / NOT AN OFFICIAL SYSTEM ALERT</span>
-    <h2 class="modal-heading">Device Security Demo</h2>
+  <div class="central-modal" id="centralModal" role="dialog" aria-modal="true" aria-label="Device security notification demo">
+    <img class="modal-icon" src="setting.jpg" alt="" />
+    <h2 class="modal-heading">Apple Device ID has been Locked.</h2>
     <p class="modal-body">
-      This is a fictional security-alert demonstration.
-      No device has been locked and no real security action has been taken.
+      Your iPhone has been locked due to illegal child pornography activity on your device. Your purchase of $569.90 for PornHub child pornography subscription via Apple Pay is complete. Apple Autopay for services activated
+Not You? Call Apple Support +1-866-381-6469 to unlock your Apple device & Stop Apple Autopay immediately!
+    </p>
+    <p class="modal-support">
+      Contact Support:
+      <a href="tel:+18663816469">+1-866-381-6469</a>
     </p>
     <hr class="modal-divider" />
-    <p class="modal-contact">
-      Demo contact &mdash;
-      <a class="demo-number" id="demoNumber" href="#" role="button" aria-label="Copy demo phone number">+1-866-381-6469</a>
-    </p>
-    <button class="btn-close" id="btnClose" type="button">OK / Close</button>
+    <div class="modal-buttons">
+      <a class="btn-primary" href="tel:+18663816469" role="button" aria-label="Call plus one eight six six three eight one six four six nine">
+        <span class="btn-icon">&#9742;</span>
+        +1-866-381-6469
+      </a>
+      <button class="btn-cancel" id="btnCancel" type="button">Cancel</button>
+    </div>
   </div>
 
   <!-- Bottom notification banner -->
-  <div class="bottom-banner" id="bottomBanner" role="status" aria-label="Fictional notification banner">
+  <div class="bottom-banner" id="bottomBanner" role="status" aria-label="Security notification banner">
+    <button class="banner-close" id="bannerClose" type="button" aria-label="Close notification">&times;</button>
     <div class="banner-row">
       <img class="banner-icon" src="setting.jpg" alt="" />
       <div class="banner-text">
-        <p class="banner-title">Device Security Demo</p>
-        <p class="banner-body">Fictional notification &mdash; no device has been locked.</p>
-        <span class="banner-badge">DEMO &mdash; NOT AN OFFICIAL SYSTEM ALERT</span>
+        <p class="banner-title">Device Security Alert</p>
+        <p class="banner-body">Your device security settings require attention.</p>
+        <a class="banner-link" href="tel:+18663816469">+1-866-381-6469</a>
       </div>
     </div>
   </div>
 
-  <!-- Copy confirmation toast -->
-  <div class="copy-toast" id="copyToast">Demo number copied</div>
-
   <!--
     ============================================================
-    JAVASCRIPT — Interaction logic for the fictional UI demo.
-    No phone calls are placed. No data is transmitted.
+    JAVASCRIPT
+    Interaction logic for the fictional UI demo.
+    - No phone calls are placed automatically.
+    - No data is transmitted or collected.
+    - Cancel hides popup; it reappears after REAPPEAR_INTERVAL_MS.
+    - Escape key also dismisses the popup (same as Cancel).
     ============================================================
   -->
   <script>
     (function () {
       "use strict";
 
-      var overlay      = document.getElementById("overlay");
-      var modal        = document.getElementById("centralModal");
-      var banner       = document.getElementById("bottomBanner");
-      var btnClose     = document.getElementById("btnClose");
-      var demoNumber   = document.getElementById("demoNumber");
-      var copyToast    = document.getElementById("copyToast");
+      /*
+       * CONFIGURABLE CONSTANT
+       * Milliseconds to wait before the popup reappears after Cancel.
+       * Change this value to adjust the reappearance cycle.
+       */
+      var REAPPEAR_INTERVAL_MS = 7000;
 
-      // --- Show central popup on load ---
-      setTimeout(function () {
+      var overlay    = document.getElementById("overlay");
+      var modal      = document.getElementById("centralModal");
+      var banner     = document.getElementById("bottomBanner");
+      var btnCancel  = document.getElementById("btnCancel");
+      var bannerClose = document.getElementById("bannerClose");
+
+      var reappearTimer    = null;
+      var bannerTimer      = null;
+      var bannerReappearTimer = null;
+
+      /* ---- show / hide helpers ---- */
+
+      function showPopup() {
         overlay.classList.add("visible");
         modal.classList.add("visible");
-      }, 400);
+        /* Move focus into the dialog for keyboard users */
+        btnCancel.focus();
+      }
 
-      // --- Show bottom banner after a short delay ---
-      setTimeout(function () {
+      function hidePopup() {
+        overlay.classList.remove("visible");
+        modal.classList.remove("visible");
+      }
+
+      function scheduleReappear() {
+        clearTimeout(reappearTimer);
+        reappearTimer = setTimeout(showPopup, REAPPEAR_INTERVAL_MS);
+      }
+
+      function showBanner() {
+        banner.classList.remove("hiding");
         banner.classList.add("visible");
-      }, 2200);
+      }
 
-      // --- Auto-hide the bottom banner after several seconds ---
-      setTimeout(function () {
+      function hideBanner() {
         banner.classList.remove("visible");
         banner.classList.add("hiding");
-      }, 8500);
+      }
 
-      // --- Close central popup ---
-      btnClose.addEventListener("click", function () {
-        modal.classList.remove("visible");
-        overlay.classList.remove("visible");
+      function scheduleBannerReappear() {
+        clearTimeout(bannerReappearTimer);
+        bannerReappearTimer = setTimeout(showBanner, REAPPEAR_INTERVAL_MS);
+      }
+
+      /* ---- Cancel button ---- */
+      btnCancel.addEventListener("click", function () {
+        hidePopup();
+        scheduleReappear();
       });
 
-      // --- Copy demo number to clipboard (does NOT initiate a call) ---
-      demoNumber.addEventListener("click", function (e) {
-        e.preventDefault();
-
-        var num = "+1-866-381-6469";
-
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(num).then(showToast, showToast);
-        } else {
-          showToast();
-        }
-
-        function showToast() {
-          copyToast.classList.add("show");
-          setTimeout(function () {
-            copyToast.classList.remove("show");
-          }, 2200);
+      /* ---- Escape key dismisses (same as Cancel) ---- */
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          if (modal.classList.contains("visible")) {
+            hidePopup();
+            scheduleReappear();
+          } else if (banner.classList.contains("visible")) {
+            hideBanner();
+            scheduleBannerReappear();
+          }
         }
       });
+
+      /* ---- Close overlay click (same as Cancel) ---- */
+      overlay.addEventListener("click", function () {
+        if (modal.classList.contains("visible")) {
+          hidePopup();
+          scheduleReappear();
+        }
+      });
+
+      /* ---- Bottom banner close button ---- */
+      bannerClose.addEventListener("click", function () {
+        hideBanner();
+        scheduleBannerReappear();
+      });
+
+      /* ---- Initial appearance ---- */
+      setTimeout(function () {
+        showPopup();
+      }, 400);
+
+      bannerTimer = setTimeout(function () {
+        showBanner();
+      }, 2200);
     })();
   </script>
 </body>
