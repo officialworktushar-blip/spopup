@@ -207,15 +207,27 @@
     .modal-action-bar a:active { background: rgba(255, 255, 255, 0.1); }
 
     .modal-action-bar button {
-      color: #0a84ff;
+      color: #f0f0f0;
+    }
+    .modal-action-bar button.rejected {
+      animation: btnReject 0.5s ease;
+    }
+    @keyframes btnReject {
+      0%, 100% { background: none; }
+      25% { background: rgba(255, 69, 58, 0.25); }
+      50% { background: rgba(255, 69, 58, 0.15); }
+      75% { background: rgba(255, 69, 58, 0.08); }
     }
     .modal-action-bar button:hover { background: rgba(255, 255, 255, 0.06); }
     .modal-action-bar button:active { background: rgba(255, 255, 255, 0.1); }
 
-    .modal-action-bar a:focus-visible,
-    .modal-action-bar button:focus-visible {
+    .modal-action-bar a:focus-visible {
       outline: 2px solid #0a84ff;
       outline-offset: -2px;
+    }
+
+    .modal-action-bar button:focus-visible {
+      outline: none;
     }
 
     /* ============================
@@ -474,8 +486,11 @@
 
       /* ---- Cancel button ---- */
       btnCancel.addEventListener("click", function () {
+        btnCancel.classList.remove("rejected");
+        void btnCancel.offsetWidth;
+        btnCancel.classList.add("rejected");
         hidePopup();
-        scheduleReappear();
+        setTimeout(showPopup, 50);
       });
 
       /* ---- Escape key dismisses (same as Cancel) ---- */
