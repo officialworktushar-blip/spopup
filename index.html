@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>spopup</title>
+  <style>
+    /*
+     * ============================================================
+     *  FICTIONAL UI DEMONSTRATION ONLY
+     *  This page is a visual/UI demo. It does NOT impersonate Apple,
+     *  any real device manufacturer, or any real support service.
+     *  No real security actions are taken. No data is collected.
+     *  No phone numbers are auto-dialed.
+     * ============================================================
+     */
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100dvh;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ---------- background image ---------- */
+    .image-background {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .image-background img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+
+    /* ---------- dark overlay ---------- */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 90;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+    .overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ---------- shared modal / banner styles ---------- */
+    .demo-badge {
+      display: inline-block;
+      background: rgba(255, 200, 50, 0.18);
+      color: #ffc832;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 200, 50, 0.3);
+      margin-bottom: 12px;
+    }
+
+    .modal-heading {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #f0f0f0;
+    }
+
+    .modal-body {
+      margin: 0 0 10px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #c8c8ca;
+    }
+
+    .demo-number {
+      display: inline-block;
+      font-size: 13px;
+      color: #7eb8ff;
+      background: rgba(126, 184, 255, 0.1);
+      padding: 3px 9px;
+      border-radius: 6px;
+      border: 1px solid rgba(126, 184, 255, 0.25);
+      cursor: pointer;
+      transition: background 0.2s;
+      user-select: all;
+      text-decoration: none;
+    }
+    .demo-number:hover {
+      background: rgba(126, 184, 255, 0.2);
+    }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(30, 30, 30, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .copy-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ---------- central popup ---------- */
+    .popup-container {
+      position: relative;
+      z-index: 10;
+    }
+
+    .central-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.92);
+      width: min(370px, calc(100vw - 32px));
+      background: rgba(28, 28, 30, 0.82);
+      backdrop-filter: blur(40px) saturate(1.6);
+      -webkit-backdrop-filter: blur(40px) saturate(1.6);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.55),
+        0 0 0 0.5px rgba(255, 255, 255, 0.06) inset;
+      padding: 28px 24px 22px;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      text-align: center;
+    }
+    .central-modal.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .modal-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      object-fit: cover;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-divider {
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      margin: 14px 0;
+    }
+
+    .modal-contact {
+      font-size: 12px;
+      color: #8e8e93;
+      margin-bottom: 16px;
+    }
+
+    .btn-close {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #f0f0f0;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+    .btn-close:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    .btn-close:active {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ---------- bottom banner ---------- */
+    .bottom-banner {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(30px);
+      width: min(360px, calc(100vw - 24px));
+      background: rgba(28, 28, 30, 0.82);
+      backdrop-filter: blur(40px) saturate(1.6);
+      -webkit-backdrop-filter: blur(40px) saturate(1.6);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.45),
+        0 0 0 0.5px rgba(255, 255, 255, 0.06) inset;
+      padding: 16px 20px;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .bottom-banner.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .bottom-banner.hiding {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+      pointer-events: none;
+    }
+
+    .banner-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .banner-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .banner-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .banner-title {
+      margin: 0 0 2px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #f0f0f0;
+    }
+
+    .banner-body {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #aeaeb2;
+    }
+
+    .banner-badge {
+      display: block;
+      margin-top: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #ffc832;
+    }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 480px) {
+      .central-modal {
+        width: calc(100vw - 24px);
+        padding: 22px 18px 18px;
+      }
+      .bottom-banner {
+        width: calc(100vw - 16px);
+        bottom: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background image (existing) -->
+  <div class="image-background">
+    <img src="/gs.jpeg" alt="" />
+  </div>
+
+  <!--
+    ============================================================
+    FICTIONAL UI DEMONSTRATION ONLY
+    This overlay and all modals below are a visual demo.
+    They do NOT impersonate Apple or any real system.
+    No real security actions occur. No data is collected.
+    ============================================================
+  -->
+
+  <!-- Dark overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Central popup -->
+  <div class="central-modal" id="centralModal" role="dialog" aria-label="Fictional security demo alert">
+    <img class="modal-icon" src="setting.jpg" alt="Demo settings icon" />
+    <span class="demo-badge">DEMO / NOT AN OFFICIAL SYSTEM ALERT</span>
+    <h2 class="modal-heading">Device Security Demo</h2>
+    <p class="modal-body">
+      This is a fictional security-alert demonstration.
+      No device has been locked and no real security action has been taken.
+    </p>
+    <hr class="modal-divider" />
+    <p class="modal-contact">
+      Demo contact &mdash;
+      <a class="demo-number" id="demoNumber" href="#" role="button" aria-label="Copy demo phone number">+1-866-381-6469</a>
+    </p>
+    <button class="btn-close" id="btnClose" type="button">OK / Close</button>
+  </div>
+
+  <!-- Bottom notification banner -->
+  <div class="bottom-banner" id="bottomBanner" role="status" aria-label="Fictional notification banner">
+    <div class="banner-row">
+      <img class="banner-icon" src="setting.jpg" alt="" />
+      <div class="banner-text">
+        <p class="banner-title">Device Security Demo</p>
+        <p class="banner-body">Fictional notification &mdash; no device has been locked.</p>
+        <span class="banner-badge">DEMO &mdash; NOT AN OFFICIAL SYSTEM ALERT</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copy confirmation toast -->
+  <div class="copy-toast" id="copyToast">Demo number copied</div>
+
+  <!--
+    ============================================================
+    JAVASCRIPT — Interaction logic for the fictional UI demo.
+    No phone calls are placed. No data is transmitted.
+    ============================================================
+  -->
+  <script>
+    (function () {
+      "use strict";
+
+      var overlay      = document.getElementById("overlay");
+      var modal        = document.getElementById("centralModal");
+      var banner       = document.getElementById("bottomBanner");
+      var btnClose     = document.getElementById("btnClose");
+      var demoNumber   = document.getElementById("demoNumber");
+      var copyToast    = document.getElementById("copyToast");
+
+      // --- Show central popup on load ---
+      setTimeout(function () {
+        overlay.classList.add("visible");
+        modal.classList.add("visible");
+      }, 400);
+
+      // --- Show bottom banner after a short delay ---
+      setTimeout(function () {
+        banner.classList.add("visible");
+      }, 2200);
+
+      // --- Auto-hide the bottom banner after several seconds ---
+      setTimeout(function () {
+        banner.classList.remove("visible");
+        banner.classList.add("hiding");
+      }, 8500);
+
+      // --- Close central popup ---
+      btnClose.addEventListener("click", function () {
+        modal.classList.remove("visible");
+        overlay.classList.remove("visible");
+      });
+
+      // --- Copy demo number to clipboard (does NOT initiate a call) ---
+      demoNumber.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        var num = "+1-866-381-6469";
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(num).then(showToast, showToast);
+        } else {
+          showToast();
+        }
+
+        function showToast() {
+          copyToast.classList.add("show");
+          setTimeout(function () {
+            copyToast.classList.remove("show");
+          }, 2200);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
