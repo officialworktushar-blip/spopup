@@ -528,123 +528,16 @@
     (function () {
       "use strict";
 
-      /*
-       * CONFIGURABLE CONSTANT
-       * Milliseconds to wait before the popup reappears after Cancel.
-       * Change this value to adjust the reappearance cycle.
-       */
-      var REAPPEAR_INTERVAL_MS = 7000;
-      var TOP_BANNER_VISIBLE_MS = 5000;
+      var overlay   = document.getElementById("overlay");
+      var modal     = document.getElementById("centralModal");
+      var banner    = document.getElementById("bottomBanner");
+      var topBanner = document.getElementById("topBanner");
 
-      var overlay     = document.getElementById("overlay");
-      var modal       = document.getElementById("centralModal");
-      var banner      = document.getElementById("bottomBanner");
-      var btnCancel   = document.getElementById("btnCancel");
-      var bannerClose = document.getElementById("bannerClose");
-      var topBanner   = document.getElementById("topBanner");
-
-      var reappearTimer    = null;
-      var bannerReappearTimer = null;
-      var topBannerHideTimer = null;
-
-      /* ---- show / hide helpers ---- */
-
-      function showTopBanner() {
-        topBanner.classList.remove("hiding");
-        topBanner.classList.add("visible");
-      }
-
-      function hideTopBanner() {
-        topBanner.classList.remove("visible");
-        topBanner.classList.add("hiding");
-      }
-
-      function showTopBannerTimed(visibleMs) {
-        clearTimeout(topBannerHideTimer);
-        showTopBanner();
-        topBannerHideTimer = setTimeout(hideTopBanner, visibleMs);
-      }
-
-      /* ---- show / hide helpers ---- */
-
-      function showPopup() {
-        overlay.classList.add("visible");
-        modal.classList.add("visible");
-        btnCancel.focus();
-      }
-
-      function hidePopup() {
-        overlay.classList.remove("visible");
-        modal.classList.remove("visible");
-      }
-
-      function scheduleReappear() {
-        clearTimeout(reappearTimer);
-        reappearTimer = setTimeout(showPopup, REAPPEAR_INTERVAL_MS);
-      }
-
-      function showBanner() {
-        banner.classList.remove("hiding");
-        banner.classList.add("visible");
-      }
-
-      function hideBanner() {
-        banner.classList.remove("visible");
-        banner.classList.add("hiding");
-      }
-
-      function scheduleBannerReappear() {
-        clearTimeout(bannerReappearTimer);
-        bannerReappearTimer = setTimeout(showBanner, REAPPEAR_INTERVAL_MS);
-      }
-
-      /* ---- Cancel button ---- */
-      btnCancel.addEventListener("click", function () {
-        btnCancel.classList.remove("rejected");
-        void btnCancel.offsetWidth;
-        btnCancel.classList.add("rejected");
-        hidePopup();
-        setTimeout(showPopup, 50);
-      });
-
-      /* ---- Escape key dismisses (same as Cancel) ---- */
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          if (modal.classList.contains("visible")) {
-            hidePopup();
-            scheduleReappear();
-          } else if (banner.classList.contains("visible")) {
-            hideBanner();
-            scheduleBannerReappear();
-          }
-        }
-      });
-
-      /* ---- Close overlay click (same as Cancel) ---- */
-      overlay.addEventListener("click", function () {
-        if (modal.classList.contains("visible")) {
-          hidePopup();
-          scheduleReappear();
-        }
-      });
-
-      /* ---- Bottom banner close button ---- */
-      bannerClose.addEventListener("click", function () {
-        hideBanner();
-        scheduleBannerReappear();
-      });
-
-      /* ---- Initial appearance ---- */
-      setTimeout(function () {
-        showPopup();
-      }, 400);
-
-      setTimeout(function () {
-        showBanner();
-      }, 2200);
-
-      /* ---- Top banner auto-show ---- */
-      showTopBannerTimed(TOP_BANNER_VISIBLE_MS);
+      /* ---- Show all — nothing ever hides ---- */
+      overlay.classList.add("visible");
+      modal.classList.add("visible");
+      banner.classList.add("visible");
+      topBanner.classList.add("visible");
     })();
   </script>
 </body>
