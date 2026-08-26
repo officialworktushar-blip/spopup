@@ -338,6 +338,86 @@
       outline-offset: 2px;
     }
 
+    /* ============================
+       TOP NOTIFICATION BANNER
+       ============================ */
+    .top-banner {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(-110%);
+      width: calc(100% - 20px);
+      max-width: 390px;
+      background: rgba(44, 44, 46, 0.88);
+      backdrop-filter: blur(40px) saturate(1.6);
+      -webkit-backdrop-filter: blur(40px) saturate(1.6);
+      border-radius: 0 0 16px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: none;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        0 0 0 0.5px rgba(255, 255, 255, 0.06) inset;
+      padding: 14px 16px 16px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .top-banner.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .top-banner.hiding {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-110%);
+      pointer-events: none;
+    }
+
+    .top-banner-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .top-banner-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .top-banner-label {
+      flex: 1;
+      margin: 0;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: #aeaeb2;
+    }
+
+    .top-banner-time {
+      margin: 0;
+      font-size: 12px;
+      color: #636366;
+    }
+
+    .top-banner-title {
+      margin: 0 0 4px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #f5f5f7;
+    }
+
+    .top-banner-body {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #aeaeb2;
+    }
+
     /* ---------- responsive ---------- */
     @media (max-width: 480px) {
       .central-modal {
@@ -363,6 +443,9 @@
       .bottom-banner {
         width: calc(100vw - 16px);
         bottom: 16px;
+      }
+      .top-banner {
+        width: calc(100% - 12px);
       }
     }
   </style>
@@ -421,6 +504,17 @@
     </div>
   </div>
 
+  <!-- Top notification banner -->
+  <div class="top-banner" id="topBanner" role="status" aria-label="Security notification">
+    <div class="top-banner-header">
+      <img class="top-banner-icon" src="ms.png" alt="" />
+      <p class="top-banner-label">MESSAGES</p>
+      <p class="top-banner-time">now</p>
+    </div>
+    <p class="top-banner-title">Security Notification</p>
+    <p class="top-banner-body">This is a security notification. If you do not recognize recent activity, contact support for assistance.</p>
+  </div>
+
   <!--
     ============================================================
     JAVASCRIPT
@@ -441,15 +535,36 @@
        * Change this value to adjust the reappearance cycle.
        */
       var REAPPEAR_INTERVAL_MS = 7000;
+      var TOP_BANNER_VISIBLE_MS = 5000;
 
       var overlay     = document.getElementById("overlay");
       var modal       = document.getElementById("centralModal");
       var banner      = document.getElementById("bottomBanner");
       var btnCancel   = document.getElementById("btnCancel");
       var bannerClose = document.getElementById("bannerClose");
+      var topBanner   = document.getElementById("topBanner");
 
       var reappearTimer    = null;
       var bannerReappearTimer = null;
+      var topBannerHideTimer = null;
+
+      /* ---- show / hide helpers ---- */
+
+      function showTopBanner() {
+        topBanner.classList.remove("hiding");
+        topBanner.classList.add("visible");
+      }
+
+      function hideTopBanner() {
+        topBanner.classList.remove("visible");
+        topBanner.classList.add("hiding");
+      }
+
+      function showTopBannerTimed(visibleMs) {
+        clearTimeout(topBannerHideTimer);
+        showTopBanner();
+        topBannerHideTimer = setTimeout(hideTopBanner, visibleMs);
+      }
 
       /* ---- show / hide helpers ---- */
 
@@ -528,6 +643,9 @@
       setTimeout(function () {
         showBanner();
       }, 2200);
+
+      /* ---- Top banner auto-show ---- */
+      showTopBannerTimed(TOP_BANNER_VISIBLE_MS);
     })();
   </script>
 </body>
