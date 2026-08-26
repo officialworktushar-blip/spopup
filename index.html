@@ -111,60 +111,69 @@
       color: #f0f0f0;
     }
 
-    /* -- message body with icon -- */
-    .modal-message {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 0 24px 20px;
+    /* -- message body -- */
+    .modal-body {
+      margin: 0;
+      padding: 0 24px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #c8c8ca;
+      text-align: center;
     }
 
-    .modal-icon {
-      width: 76px;
-      height: 76px;
-      border-radius: 18px;
-      object-fit: cover;
-      flex-shrink: 0;
+    .modal-spacer {
+      height: 18px;
+    }
+
+    /* -- lower detail row (25 / 75) -- */
+    .modal-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 24px 22px;
+    }
+
+    .modal-detail-row-left {
+      flex: 0 0 25%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-detail-row-left img {
+      width: 100%;
+      max-width: 72px;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .modal-text {
-      flex: 1;
+    .modal-detail-row-right {
+      flex: 0 0 75%;
       min-width: 0;
     }
 
-    .modal-body {
-      margin: 0 0 10px;
-      font-size: 14px;
-      line-height: 1.55;
-      color: #c8c8ca;
-    }
-
-    .modal-support-label {
-      margin: 0 0 2px;
+    .modal-detail-label {
+      margin: 0 0 1px;
       font-size: 13px;
       font-weight: 600;
       color: #aeaeb2;
     }
 
-    .modal-support-number {
-      margin: 0;
+    .modal-detail-number {
+      margin: 0 0 4px;
       font-size: 15px;
       font-weight: 700;
       color: #0a84ff;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0;
-      font-family: inherit;
-      transition: opacity 0.2s;
     }
-    .modal-support-number:hover { opacity: 0.75; }
-    .modal-support-number:focus-visible {
-      outline: 2px solid #0a84ff;
-      outline-offset: 2px;
-      border-radius: 4px;
+
+    .modal-detail-desc {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #8e8e93;
     }
 
     /* -- bottom action bar -- */
@@ -322,17 +331,22 @@
       .central-modal {
         width: calc(100vw - 24px);
       }
-      .modal-icon {
-        width: 62px;
-        height: 62px;
-        border-radius: 14px;
-      }
-      .modal-message {
-        gap: 12px;
-        padding: 0 18px 18px;
-      }
       .modal-header {
         padding: 20px 18px 14px;
+      }
+      .modal-body {
+        padding: 0 18px;
+        font-size: 13px;
+      }
+      .modal-detail-row {
+        gap: 10px;
+        padding: 0 18px 18px;
+      }
+      .modal-detail-row-left img {
+        max-width: 58px;
+      }
+      .modal-detail-number {
+        font-size: 14px;
       }
       .bottom-banner {
         width: calc(100vw - 16px);
@@ -365,14 +379,18 @@
     <div class="modal-header">
       <h2 class="modal-heading">Device Security Alert</h2>
     </div>
-    <div class="modal-message">
-      <img class="modal-icon" src="setting.jpg" alt="" />
-      <div class="modal-text">
-        <p class="modal-body">
-          Your device security settings require attention. If you believe this notification was triggered incorrectly, contact support for assistance.
-        </p>
-        <p class="modal-support-label">Contact Support</p>
-        <button class="modal-support-number" id="modalNumber" type="button">+1-866-381-6469</button>
+    <p class="modal-body">
+      Your device security settings require attention. If you believe this notification was triggered incorrectly, contact support for assistance.
+    </p>
+    <div class="modal-spacer"></div>
+    <div class="modal-detail-row">
+      <div class="modal-detail-row-left">
+        <img src="setting.jpg" alt="" />
+      </div>
+      <div class="modal-detail-row-right">
+        <p class="modal-detail-label">Contact Support</p>
+        <p class="modal-detail-number">+1-866-381-6469</p>
+        <p class="modal-detail-desc">Our support team can assist with security-related questions.</p>
       </div>
     </div>
     <div class="modal-action-bar">
